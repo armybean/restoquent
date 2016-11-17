@@ -1,0 +1,27 @@
+{
+  "name": "armybean/restoquent",
+  "license": "proprietary",
+  "description": "",
+  "authors": [
+    {
+      "name": "Daniel Franke",
+      "email": "info@df-web.net"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "4.2.*",
+    "illuminate/config": "~4",
+    "illuminate/container": "~4",
+    "nategood/httpful": "^0.2"
+  },
+  "autoload": {
+    "classmap": [
+      "src/migrations"
+    ],
+    "psr-0": {
+      "Armybean\\Restoquent\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
