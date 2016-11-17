@@ -13,6 +13,7 @@
 
 namespace Armybean\Restoquent\Finders;
 
+use Armybean\Restoquent\Facades\AuthFactory;
 use Armybean\Restoquent\Facades\RequestFactory;
 use Armybean\Restoquent\Facades\ResponseInterpreterFactory;
 use Armybean\Restoquent\Facades\UrlGenerator;
@@ -62,6 +63,12 @@ class InstanceFinder {
 
         // set any get parameters on the request
         $request->setGetParameters($getParams);
+
+        // add auth if necessary
+        if ($auth = AuthFactory::build())
+        {
+            $request->authenticate($auth);
+        }
 
         /** @var Response $response */
         // actually send the request

@@ -26,7 +26,7 @@ class ResponseInterpreterFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Responses\Interpreters";
+        return "\Armybean\Restoquent\Responses\Interpreters";
     }
 
     /**
@@ -36,7 +36,7 @@ class ResponseInterpreterFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Responses\Interpreters\ResponseInterpreterInterface";
+        return "\Armybean\Restoquent\Responses\Interpreters\ResponseInterpreterInterface";
     }
 
     /**

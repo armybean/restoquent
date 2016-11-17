@@ -25,8 +25,7 @@ interface AuthenticationInterface {
     public function __construct(Container $app);
 
     /**
-     * Function to add the necessary authentication
-     * to the request
+     * Function to add the necessary authentication to the request
      *
      * @param \Httpful\Request $request Request passed by reference
      *

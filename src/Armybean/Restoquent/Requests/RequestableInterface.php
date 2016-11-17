@@ -15,6 +15,7 @@ namespace Armybean\Restoquent\Requests;
 
 use Armybean\Restoquent\Finders\Conditions\QueryConditionInterface;
 use Armybean\Restoquent\Finders\Conditions\QueryResultOrderInterface;
+use Armybean\Restoquent\Requests\Auth\AuthenticationInterface;
 use Armybean\Restoquent\Resource\Model;
 use Illuminate\Container\Container;
 
@@ -41,6 +42,8 @@ interface RequestableInterface {
     public function addQueryCondition(QueryConditionInterface $condition);
 
     public function addQueryResultOrder(QueryResultOrderInterface $resultOrder);
+
+    public function authenticate(AuthenticationInterface $auth);
 
     public function sendRequest();
 }

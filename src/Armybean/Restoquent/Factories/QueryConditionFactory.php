@@ -26,7 +26,7 @@ class QueryConditionFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Finders\Conditions";
+        return "\Armybean\Restoquent\Finders\Conditions";
     }
 
     /**
@@ -36,7 +36,7 @@ class QueryConditionFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Finders\Conditions\QueryConditionInterface";
+        return "\Armybean\Restoquent\Finders\Conditions\QueryConditionInterface";
     }
 
     /**

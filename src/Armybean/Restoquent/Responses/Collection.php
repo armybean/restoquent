@@ -43,7 +43,7 @@ class Collection implements \Iterator {
      *
      * @see Iterator
      *
-     * @return \Restoquent\Resource\Model
+     * @return \Armybean\Restoquent\Resource\Model
      */
     public function rewind()
     {
@@ -55,7 +55,7 @@ class Collection implements \Iterator {
      *
      * @see Iterator
      *
-     * @return \Restoquent\Resource\Model
+     * @return \Armybean\Restoquent\Resource\Model
      */
     public function current()
     {
@@ -67,7 +67,7 @@ class Collection implements \Iterator {
      *
      * @see Iterator
      *
-     * @return \Restoquent\Resource\Model
+     * @return \Armybean\Restoquent\Resource\Model
      */
     public function key()
     {
@@ -79,7 +79,7 @@ class Collection implements \Iterator {
      *
      * @see Iterator
      *
-     * @return \Restoquent\Resource\Model
+     * @return \Armybean\Restoquent\Resource\Model
      */
     public function next()
     {
@@ -111,7 +111,7 @@ class Collection implements \Iterator {
     /**
      * Function to return the first item of the collection
      *
-     * @return null|\Restoquent\Resource\Model
+     * @return null|\Armybean\Restoquent\Resource\Model
      */
     public function first()
     {
@@ -121,7 +121,7 @@ class Collection implements \Iterator {
     /**
      * Function to return the last item of the collection
      *
-     * @return null|\Restoquent\Resource\Model
+     * @return null|\Armybean\Restoquent\Resource\Model
      */
     public function last()
     {
@@ -132,8 +132,8 @@ class Collection implements \Iterator {
      * Function to convert the collection to json using each collection elements attributes as an array then encoding
      * the array to json
      *
-     * @param  string $collectionKey
-     * @param  string $metaKey
+     * @param string $collectionKey
+     * @param string $metaKey
      *
      * @return array
      */

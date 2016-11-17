@@ -10,15 +10,43 @@ use Illuminate\Support\ServiceProvider;
 class RestoquentServiceProvider extends ServiceProvider {
 
     /**
-     * Indicates if loading of the provider is deferred.
+     * Bootstrap the application events.
      *
-     * @var bool
+     * @return void
      */
-    protected $defer = false;
+    public function boot()
+    {
+        // Register classes
+    }
 
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // done with boot()
+        $this->app = static::make($this->app);
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return ['armybean/restoquent'];
+    }
+
+    /**
+     * @param null|Container $app
+     *
+     * @return \Illuminate\Container\Container|null
+     */
     public static function make($app = null)
     {
-
         if ( ! $app)
         {
             $app = new Container;
@@ -35,6 +63,10 @@ class RestoquentServiceProvider extends ServiceProvider {
 
         return $app;
     }
+
+    ////////////////////////////////////////////////////////////////////
+    /////////////////////////// CLASS BINDINGS /////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
     /**
      * Bind the Restoquent paths
@@ -69,52 +101,13 @@ class RestoquentServiceProvider extends ServiceProvider {
 
         $app->bindIf('config', function ($app)
         {
-            $fileloader = new FileLoader($app['files'], __DIR__ . '/../config');
+            $fileloader = new FileLoader($app['files'], __DIR__ . '/../../config');
 
             return new Repository($fileloader, 'config');
         }, true);
 
         // Register factory and custom configurations
         $app = $this->registerConfig($app);
-
-        return $app;
-    }
-
-
-    ////////////////////////////////////////////////////////////////////
-    /////////////////////////// CLASS BINDINGS /////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
-    /**
-     * Register factory and custom configurations
-     *
-     * @param Container $app
-     *
-     * @return Container
-     */
-    protected function registerConfig(Container $app)
-    {
-        // Register config file(filename)
-        $app['config']->package('armybean/restoquent', __DIR__ . '/../config');
-        $app['config']->getLoader();
-
-        // Register custom config
-        $custom = $app['path.restoquent.config'];
-        if (file_exists($custom))
-        {
-            $app['config']->afterLoading('restoquent', function ($me, $group, $items) use ($custom)
-            {
-                $customItems = $custom . '/' . $group . '.php';
-                if ( ! file_exists($customItems))
-                {
-                    return $items;
-                }
-
-                $customItems = include $customItems;
-
-                return array_replace_recursive($items, $customItems);
-            });
-        }
 
         return $app;
     }
@@ -197,38 +190,42 @@ class RestoquentServiceProvider extends ServiceProvider {
         return $app;
     }
 
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->package('armybean/restoquent');
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
     ////////////////////////////////////////////////////////////////////
     /////////////////////////////// HELPERS ////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
     /**
-     * Get the services provided by the provider.
+     * Register factory and custom configurations
      *
-     * @return array
+     * @param Container $app
+     *
+     * @return Container
      */
-    public function provides()
+    protected function registerConfig(Container $app)
     {
-        return [];
+        // Register config file(filename)
+        $app['config']->package('armybean/restoquent', __DIR__ . '/../../config');
+        $app['config']->getLoader();
+
+        // Register custom config
+        $custom = $app['path.restoquent.config'];
+        if (file_exists($custom))
+        {
+            $app['config']->afterLoading('restoquent', function ($me, $group, $items) use ($custom)
+            {
+                $customItems = $custom . '/' . $group . '.php';
+                if ( ! file_exists($customItems))
+                {
+                    return $items;
+                }
+
+                $customItems = include $customItems;
+
+                return array_replace_recursive($items, $customItems);
+            });
+        }
+
+        return $app;
     }
 
 }

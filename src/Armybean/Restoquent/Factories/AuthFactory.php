@@ -26,7 +26,7 @@ class AuthFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Requests\Auth";
+        return "\Armybean\Restoquent\Requests\Auth";
     }
 
     /**
@@ -36,7 +36,7 @@ class AuthFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Requests\Auth\AuthenticationInterface";
+        return "\Armybean\Restoquent\Requests\Auth\AuthenticationInterface";
     }
 
     /**

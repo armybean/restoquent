@@ -57,7 +57,7 @@ class RequestFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Requests";
+        return "\Armybean\Restoquent\Requests";
     }
 
     /**
@@ -67,7 +67,7 @@ class RequestFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Requests\RequestableInterface";
+        return "\Armybean\Restoquent\Requests\RequestableInterface";
     }
 
     /**

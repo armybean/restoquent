@@ -16,6 +16,11 @@ namespace Armybean\Restoquent\Facades;
 use Armybean\Restoquent\RestoquentServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * Class Config
+ *
+ * @package Armybean\Restoquent\Facades
+ */
 class Config extends Facade {
 
     protected static function getFacadeAccessor()

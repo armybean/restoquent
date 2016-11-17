@@ -57,7 +57,7 @@ class UrlGenerator {
      *
      * @return string
      */
-    public function getCreateUri($model, $options = [])
+    public function getCreateUri(Model $model, array $options = [])
     {
         return $this->getCollectionUri($model, $options);
     }

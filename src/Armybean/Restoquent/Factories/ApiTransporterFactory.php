@@ -26,7 +26,7 @@ class ApiTransporterFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Transporters";
+        return "\Armybean\Restoquent\Transporters";
     }
 
     /**
@@ -36,7 +36,7 @@ class ApiTransporterFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Transporters\TransporterInterface";
+        return "\Armybean\Restoquent\Transporters\TransporterInterface";
     }
 
     /**

@@ -13,6 +13,7 @@
 
 namespace Armybean\Restoquent\Finders;
 
+use Armybean\Restoquent\Facades\AuthFactory;
 use Armybean\Restoquent\Facades\Config;
 use Armybean\Restoquent\Facades\RequestFactory;
 use Armybean\Restoquent\Facades\UrlGenerator;
@@ -58,8 +59,7 @@ class CollectionFinder {
         QueryConditionInterface $condition = null,
         QueryResultOrderInterface $resultOrder = null,
         array $getParams = []
-    )
-    {
+    ) {
         /** @var RequestableInterface $request */
         // get a request object
         $request = RequestFactory::build();
@@ -77,6 +77,12 @@ class CollectionFinder {
         if ($resultOrder)
         {
             $request->addQueryResultOrder($resultOrder);
+        }
+
+        // add auth if necessary
+        if ($auth = AuthFactory::build())
+        {
+            $request->authenticate($auth);
         }
 
         // set any get parameters on the request

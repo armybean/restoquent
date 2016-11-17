@@ -26,7 +26,7 @@ class ErrorHandlerFactory extends FactoryDriver {
      */
     public function getDriverNamespace()
     {
-        return "\Restoquent\Responses\ErrorHandlers";
+        return "\Armybean\Restoquent\Responses\ErrorHandlers";
     }
 
     /**
@@ -36,7 +36,7 @@ class ErrorHandlerFactory extends FactoryDriver {
      */
     public function getDriverInterface()
     {
-        return "\Restoquent\Responses\ErrorHandlers\ErrorHandlerInterface";
+        return "\Armybean\Restoquent\Responses\ErrorHandlers\ErrorHandlerInterface";
     }
 
     /**

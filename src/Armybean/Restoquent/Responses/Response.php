@@ -82,7 +82,6 @@ class Response extends BaseResponse {
      */
     public function newInstance(Container $app, \Httpful\Response $response)
     {
-
         // This method just provides a convenient way for us to generate fresh model instances of this current model. It
         // is particularly useful during the hydration of new objects via the Eloquent query builder instances.
         $r = new static($app, $response);

@@ -88,7 +88,6 @@ class GetParamsResultOrder implements QueryResultOrderInterface {
      */
     public function setOrderDirection($direction)
     {
-
         if ($direction != $this->getOrderDirectionAscending() && $direction != $this->getOrderDirectionDescending())
         {
             throw new \InvalidArgumentException("Invalid order direction: {$direction}");

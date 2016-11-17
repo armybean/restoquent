@@ -13,6 +13,7 @@
 
 namespace Armybean\Restoquent\Resource;
 
+use Armybean\Restoquent\Facades\AuthFactory;
 use Armybean\Restoquent\Facades\Collection;
 use Armybean\Restoquent\Facades\Config;
 use Armybean\Restoquent\Facades\ErrorHandlerFactory;
@@ -35,17 +36,13 @@ use Illuminate\Container\Container;
 class Model {
 
     /**
-     * Property to hold the data about entities for which this
-     * resource is nested beneath.  For example if this entity was
-     * 'Employee' which was a nested resource under a 'Company' and
-     * the instance URI should be /companies/:company_id/employees/:id
-     * then you would assign this string with 'Company:company_id'.
-     * Doing this will allow you to pass in ':company_id' as an option
-     * to the URI creation functions and ':company_id' will be replaced
-     * with the value passed.
+     * Property to hold the data about entities for which this resource is nested beneath.  For example if this
+     * entity was 'Employee' which was a nested resource under a 'Company' and the instance URI should be
+     * /companies/:company_id/employees/:id then you would assign this string with 'Company:company_id'. Doing this
+     * will allow you to pass in ':company_id' as an option to the URI creation functions and ':company_id' will be
+     * replaced with the value passed.
      *
-     * Alternativley you could set the value to something like 'Company:100'.
-     * You could do this before a call like:
+     * Alternativley you could set the value to something like 'Company:100'. You could do this before a call like:
      *
      * <code>
      * $e = new Employee;
@@ -55,21 +52,21 @@ class Model {
      * </code>
      *
      *
-     * This value can be nested as a comma separated string as well.
-     * So you could set something like
-     * "Company:company_id,Employee:employee_id,Preference:pref_id"
-     * which would generate
+     * This value can be nested as a comma separated string as well. So you could set something like
+     * "Company:company_id,Employee:employee_id,Preference:pref_id" which would generate
      * /companies/:company_id/employees/:employee_id/preferences/:pref_id
      *
      * @var string
      */
     public $nestedUnder;
+
     /**
      * The IoC Container
      *
      * @var Container
      */
     protected $app;
+
     /**
      * The name of the resource which is used to determine the resource URI through the use of reflection. By default
      * if this is not set the class name will be used.
@@ -77,12 +74,14 @@ class Model {
      * @var string
      */
     protected $resourceName;
+
     /**
      * Property to overwrite the getURI() function with a static value of what remote API URI path to hit
      *
      * @var string
      */
     protected $uri;
+
     /**
      * Array of instance values
      *
@@ -112,44 +111,13 @@ class Model {
     protected $guarded = '';
 
     /**
-     * Comma separated list of properties that will take
-     * a file path that should be read in and sent
-     * with any API request
-     *
-     * @var string
-     */
-    protected $fileFields = '';
-
-    /**
      * Comma separated list of properties that may be in
      * a GET request but should not be added to a create or
      * update request
      *
      * @var string
      */
-    protected $readOnlyFields = "";
-    /**
-     * Filesystem location that temporary files could be
-     * written to if needed
-     *
-     * @var string
-     */
-    protected $scratchDiskLocation;
-    /**
-     * Portion of a property name that would indicate
-     * that the value would be Base64 encoded when the
-     * property is set.
-     *
-     * @var string
-     */
-    protected $base64Indicator;
-    /**
-     * Array of files that were temporarily written for a request
-     * that should be removed after the request is done.
-     *
-     * @var array
-     */
-    private $postRequestCleanUp = [];
+    protected $readOnlyFields = '';
 
     public function __construct(array $attributes = [])
     {
@@ -227,25 +195,24 @@ class Model {
      * @param  QueryResultOrderInterface $resultOrder result ordering info
      * @param  array                     $getParams   additional GET params
      *
-     * @return \Restoquent\Responses\Collection
+     * @return \Armybean\Restoquent\Responses\Collection
      */
     public static function all(
         QueryConditionInterface $condition = null,
         QueryResultOrderInterface $resultOrder = null,
         array $getParams = []
-    )
-    {
+    ) {
         return Collection::fetch(new static, $condition, $resultOrder, $getParams);
     }
 
     /**
      * Create a new instance of the given model.
      *
-     * @param  array $attributes
+     * @param array $attributes
      *
-     * @return \Restoquent\Resource\Model
+     * @return \Armybean\Restoquent\Resource\Model
      */
-    public function newInstance($attributes = [])
+    public function newInstance(array $attributes = [])
     {
         // This method just provides a convenient way for us to generate fresh model instances of this current model.
         // It is particularly useful during the hydration of new objects.
@@ -319,28 +286,6 @@ class Model {
     public function errors()
     {
         return $this->errors;
-    }
-
-    /**
-     * Function to return an array of properties that will accept a file path
-     *
-     * @return array
-     */
-    public function getFileFields()
-    {
-        $attrs = array_map('trim', explode(',', $this->fileFields));
-
-        return array_filter($attrs);
-    }
-
-    /**
-     * Getter function to return base64 param indicator
-     *
-     * @return string
-     */
-    public function getBase64Indicator()
-    {
-        return $this->base64Indicator ?: Config::get('resource.base_64_property_indication');
     }
 
     /**
@@ -423,8 +368,12 @@ class Model {
         if ($this->getId() === false)
         {
             //make a CREATE request
-            $request->createRequest(UrlGenerator::getCreateUri($this), 'POST', [],
-                Config::get('request.http_method_param'));
+            $request->createRequest(
+                UrlGenerator::getCreateUri($this),
+                'POST',
+                [], // no extra headers
+                Config::get('request.http_method_param')
+            );
         }
         else
         {
@@ -438,11 +387,10 @@ class Model {
         }
 
         // add auth if it is needed
-        // TODO: Check how to implement authentication
-        // if ($auth = AuthFactory::build())
-        // {
-        //     $request->authenticate($auth);
-        // }
+        if ($auth = AuthFactory::build())
+        {
+            $request->authenticate($auth);
+        }
 
         // set the property attributes on the request
         $request->setModelProperties($this);
@@ -457,9 +405,6 @@ class Model {
             // get the errors and set them to our local collection
             $this->errors = ErrorHandlerFactory::build()->parseErrors($response);
 
-            // do any needed cleanup
-            $this->doPostRequestCleanUp();
-
             return false;
         }
 
@@ -473,8 +418,6 @@ class Model {
         {
             $this->{$id} = $data[$id];
         }
-
-        $this->doPostRequestCleanUp();
 
         return true;
     }
@@ -492,23 +435,6 @@ class Model {
         }
 
         return false;
-    }
-
-    /**
-     * Function to clean up any temp files written for a request
-     *
-     * @return void
-     */
-    protected function doPostRequestCleanUp()
-    {
-        while (count($this->postRequestCleanUp) > 0)
-        {
-            $f = array_pop($this->postRequestCleanUp);
-            if (file_exists($f))
-            {
-                unlink($f);
-            }
-        }
     }
 
     /**
@@ -531,16 +457,13 @@ class Model {
         );
 
         // add auth if it is needed
-        // if ($auth = AuthFactory::build())
-        // {
-        //     $request->authenticate($auth);
-        // }
+        if ($auth = AuthFactory::build())
+        {
+            $request->authenticate($auth);
+        }
 
         // actually send the request
         $response = $request->sendRequest();
-
-        // clean up anything no longer needed
-        $this->doPostRequestCleanUp();
 
         /** @var ResponseInterpreterInterface $interpreter */
         $interpreter = ResponseInterpreterFactory::build();
@@ -560,40 +483,4 @@ class Model {
         return false;
     }
 
-    /**
-     * Function to take base64 encoded image and write it to a temp file, then add that file to the property list to get
-     * added to a request.
-     *
-     * @param string $property Entity attribute
-     * @param string $value    Base64 encoded string
-     *
-     * @return void
-     */
-    protected function handleBase64File($property, $value)
-    {
-        $image = base64_decode($value);
-        $imgData = \getimagesizefromstring($image);
-        $mimeExp = explode("/", $imgData['mime']);
-        $ext = end($mimeExp);
-        $output_file = implode(
-            DIRECTORY_SEPARATOR,
-            [$this->getScratchDiskLocation(), uniqid("tmp_{$property}_") . ".$ext"]
-        );
-        $f = fopen($output_file, "wb");
-        fwrite($f, $image);
-        fclose($f);
-
-        $this->postRequestCleanUp[] = $output_file;
-        $this->{$property} = $output_file;
-    }
-
-    /**
-     * Getter function to return the scratch disk location
-     *
-     * @return string
-     */
-    public function getScratchDiskLocation()
-    {
-        return $this->scratchDiskLocation ?: Config::get('resource.scratch_disk_location');
-    }
 }

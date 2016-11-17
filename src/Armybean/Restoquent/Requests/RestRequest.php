@@ -13,6 +13,7 @@
 
 namespace Armybean\Restoquent\Requests;
 
+use Armybean\Restoquent\Facades\Config;
 use Armybean\Restoquent\Facades\ErrorHandlerFactory;
 use Armybean\Restoquent\Facades\Response;
 use Armybean\Restoquent\Facades\ResponseInterpreterFactory;
@@ -23,7 +24,6 @@ use Armybean\Restoquent\Requests\Auth\AuthenticationInterface;
 use Armybean\Restoquent\Resource\Model;
 use Armybean\Restoquent\Responses\RawResponse;
 use Armybean\Restoquent\Transporters\TransporterInterface;
-use Guzzle\Http\Client;
 use Httpful\Mime;
 use Httpful\Request;
 use Illuminate\Container\Container;
@@ -60,7 +60,7 @@ class RestRequest implements RequestableInterface {
     public function __construct(Container $app, $client = null)
     {
         $this->app = $app;
-        $this->client = $client == null ? new Client : $client;
+        //$this->client = $client == null ? new Client : $client;
     }
 
     /**
@@ -71,6 +71,11 @@ class RestRequest implements RequestableInterface {
     public function &getClient()
     {
         return $this->client;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -146,7 +151,7 @@ class RestRequest implements RequestableInterface {
      * @param array  $params  Querystring parameters to send
      * @param array  $headers Optional headers to use
      *
-     * @return \Restoquent\Responses\RawResponse
+     * @return \Armybean\Restoquent\Responses\RawResponse
      */
     public function rawGet($uri, $params = [], $headers = [])
     {
@@ -164,7 +169,7 @@ class RestRequest implements RequestableInterface {
      * @param array  $files     PUT or POST files to send (key = name, value = path)
      * @param array  $headers   Optional headers to use
      *
-     * @return \Restoquent\Responses\RawResponse
+     * @return \Armybean\Restoquent\Responses\RawResponse
      */
     public function rawRequest($uri, $method, $params = [], $getParams = [], $files = [], $headers = [])
     {
@@ -285,7 +290,7 @@ class RestRequest implements RequestableInterface {
     /**
      * Function to send the request to the remote API
      *
-     * @return \Restoquent\Responses\Response
+     * @return \Armybean\Restoquent\Responses\Response
      */
     public function sendRequest()
     {
@@ -295,7 +300,7 @@ class RestRequest implements RequestableInterface {
         }
         catch (\Exception $e)
         {
-            $response = $e->getMessage();
+            $response = null;
         }
 
         return $this->app->make('restoquent.response')->newInstance($this->app, $response);
@@ -310,7 +315,7 @@ class RestRequest implements RequestableInterface {
      * @param array  $files     files to send (key = name, value = path)
      * @param array  $headers   Optional headers to use
      *
-     * @return \Trucker\Responses\RawResponse
+     * @return RawResponse
      */
     public function rawPost($uri, $params = [], $getParams = [], $files = [], $headers = [])
     {
@@ -326,7 +331,7 @@ class RestRequest implements RequestableInterface {
      * @param  array  $files     files to send (key = name, value = path)
      * @param  array  $headers   Optional headers to use
      *
-     * @return \Trucker\Responses\RawResponse
+     * @return RawResponse
      */
     public function rawPut($uri, $params = [], $getParams = [], $files = [], $headers = [])
     {
@@ -342,7 +347,7 @@ class RestRequest implements RequestableInterface {
      * @param  array  $files     files to send (key = name, value = path)
      * @param  array  $headers   Optional headers to use
      *
-     * @return \Trucker\Responses\RawResponse
+     * @return RawResponse
      */
     public function rawPatch($uri, $params = [], $getParams = [], $files = [], $headers = [])
     {
@@ -356,7 +361,7 @@ class RestRequest implements RequestableInterface {
      * @param  array  $params  Querystring parameters to send
      * @param  array  $headers Optional headers to use
      *
-     * @return \Restoquent\Responses\RawResponse
+     * @return RawResponse
      */
     public function rawDelete($uri, $params = [], $headers = [])
     {
